@@ -6,32 +6,43 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/MonkeyBuisness/golang-iwlist"
 	"github.com/gorilla/mux"
 )
 
-type M map[string]interface{}
+var interfaceName = "wlan0"
 
-func errorMarshalling(w http.ResponseWriter, err error) {
+func response(w http.ResponseWriter, data interface{}, status int) {
+	body, err := json.Marshal(data)
+
+	if err != nil {
+		log.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(`{"error": "error marshalling data"}`))
+		return
+	}
+
+	w.WriteHeader(status)
+	w.Write(body)
+}
+
+func handleError(w http.ResponseWriter, err error) {
 	log.Println(err)
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Write([]byte(`{"error": "error marshalling data"}`))
+	var data = map[string]string{
+		"message": err.Error(),
+	}
+	response(w, data, http.StatusInternalServerError)
 }
 
 func networkCollection(w http.ResponseWriter, r *http.Request) {
-	var data = M{
-		"items": 1,
-	}
-
-	var body, err = json.Marshal(data)
-
+	cells, err := wlist.Scan(interfaceName)
 	if err != nil {
-		errorMarshalling(w, err)
+		handleError(w, err)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(body)
+	response(w, cells, http.StatusOK)
 }
 
 func notFound(w http.ResponseWriter, r *http.Request) {
@@ -48,6 +59,6 @@ func main() {
 	var port = 8080
 	var addr = fmt.Sprint(":", port)
 
-	log.Println("Listening on port: ", port)
+	log.Println("Listening on port:", port)
 	log.Fatal(http.ListenAndServe(addr, r))
 }

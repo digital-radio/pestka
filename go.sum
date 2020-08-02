@@ -1,2 +1,4 @@
+github.com/MonkeyBuisness/golang-iwlist v0.0.0-20190208105021-719e9e53bbf0 h1:ZWb23MiJcKH5S7QbTZ6Ox5UnroHU4++NtHshNj3mopM=
+github.com/MonkeyBuisness/golang-iwlist v0.0.0-20190208105021-719e9e53bbf0/go.mod h1:qZcykYkNPqzrcZhhWRgmOfMFReDnKuEIQRrdpHU0kfQ=
 github.com/gorilla/mux v1.7.4 h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=
 github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
