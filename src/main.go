@@ -13,6 +13,8 @@ import (
 var interfaceName = "wlan0"
 
 func response(w http.ResponseWriter, data interface{}, status int) {
+	w.Header().Set("Content-Type", "application/json")
+
 	body, err := json.Marshal(data)
 
 	if err != nil {
@@ -41,14 +43,14 @@ func networkCollection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	response(w, cells, http.StatusOK)
 }
 
 func notFound(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte(`{"message": "not found"}`))
+	var data = map[string]string{
+		"message": "not found",
+	}
+	response(w, data, http.StatusOK)
 }
 
 func main() {
