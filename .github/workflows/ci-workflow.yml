@@ -1,0 +1,36 @@
+name: CI
+on: 
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches: 
+      - master
+
+jobs:
+  build_amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.13.1
+      - name: Checkout source code from repo
+        uses: actions/checkout@v2
+      - name: Build
+        run: go build -o ./dist/amd64/pestka ./src/main.go
+  build_arm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.13
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.13.1
+      - name: Checkout source code from repo
+        uses: actions/checkout@v2
+      - name: Build
+        run: 	GOOS=linux GOARCH=arm GOARM=5 go build -o ./dist/arm/pestka ./src/main.go
+
+
+
+
