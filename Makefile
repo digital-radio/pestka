@@ -7,8 +7,11 @@ build-arm:
 run:
 	go run ./src/main.go
 
-style:
-    gofmt -w src/
-	
+style-fix:
+	gofmt -w src/
+
+issue-check:
+	go vet ./src/...
+
 test:
 	go test -v ./tests
