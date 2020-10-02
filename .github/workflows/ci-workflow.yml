@@ -30,7 +30,7 @@ jobs:
       - name: Build
         run: 	GOOS=linux GOARCH=arm GOARM=5 go build -o ./dist/arm/pestka ./src/main.go
   check_style:
-    runs_on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Set up Go 1.13.1
         uses: actions/setup-go@v2
