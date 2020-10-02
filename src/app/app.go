@@ -29,7 +29,6 @@ func (a *App) notFound(w http.ResponseWriter, r *http.Request) {
 	utils.Response(w, data, http.StatusNotFound)
 }
 
-
 func (a *App) getNetworks(w http.ResponseWriter, r *http.Request) {
 	cells, err := a.container.Scan(a.container.InterfaceName)
 	if err != nil {

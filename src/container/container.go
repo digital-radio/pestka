@@ -2,7 +2,7 @@ package container
 
 import wlist "github.com/MonkeyBuisness/golang-iwlist"
 
-type Scan = func (interfaceName string) ([]wlist.Cell, error)
+type Scan = func(interfaceName string) ([]wlist.Cell, error)
 
 type Container struct {
 	InterfaceName string
