@@ -6,3 +6,6 @@ build-arm:
 
 run:
 	go run ./src/main.go
+
+style:
+    gofmt -w src/
