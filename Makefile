@@ -9,3 +9,6 @@ run:
 
 style:
     gofmt -w src/
+	
+test:
+	go test -v ./tests
