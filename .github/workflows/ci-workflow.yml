@@ -36,9 +36,14 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.13.1
+      - name: Install golint
+        run: go get -u golang.org/x/lint/golint
+      - name: Add golint to PATH
+        run: export PATH=$PATH:/usr/local/go/bin/
       - name: Checkout source code from repo
         uses: actions/checkout@v2
-      - name: Check style
-        run: gofmt -d src
-
+      - name: Check style with gofmt
+        run: test -z $(gofmt -l ./src/)
+      - name: Check style with golint
+        run: golint -min_confidence 0 -set_exit_status ./src/...
 
