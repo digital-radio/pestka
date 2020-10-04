@@ -1,3 +1,4 @@
+//Package app implements http server api.
 package app
 
 import (
@@ -11,10 +12,12 @@ type App struct {
 	container container.Container
 }
 
+//New allows to creare a new App struct outside of package app.
 func New(container container.Container) App {
 	return App{container}
 }
 
+//CreateRouter creates router and maps urls to functions.
 func (a *App) CreateRouter() *mux.Router {
 	var r = mux.NewRouter()
 	r.HandleFunc("/networks", a.getNetworks).Methods(http.MethodGet)
