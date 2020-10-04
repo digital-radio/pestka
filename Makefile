@@ -10,8 +10,11 @@ run:
 style-fix:
 	gofmt -w src/
 
+style-check:
+	gofmt -w src/
+
 issue-check:
-	go vet ./src/...
+	echo "FMT check\n"; gofmt -l ./src/; echo "\nLINT check\n"; PATH=$PATH:/usr/local/go/bin/ golint -min_confidence 0 ./src/...
 
 test:
 	go test -v ./tests
