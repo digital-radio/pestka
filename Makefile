@@ -14,7 +14,10 @@ style-check:
 	gofmt -w src/
 
 issue-check:
-	echo "FMT check\n"; gofmt -l ./src/; echo "\nLINT check\n"; PATH=$PATH:/usr/local/go/bin/ golint -min_confidence 0 ./src/...
+	echo "FMT check\n"
+	gofmt -l ./src/
+	echo "\nLINT check\n"
+	golint -min_confidence 0 ./src/...
 
 test:
 	go test -v ./tests
