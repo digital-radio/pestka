@@ -11,9 +11,6 @@ style-fix:
 	gofmt -w src/
 
 style-check:
-	gofmt -w src/
-
-issue-check:
 	echo "FMT check\n"
 	gofmt -l ./src/
 	echo "\nLINT check\n"
