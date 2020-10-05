@@ -8,6 +8,7 @@ import (
 	"net/http"
 )
 
+//App allows to setup router.
 type App struct {
 	container container.Container
 }

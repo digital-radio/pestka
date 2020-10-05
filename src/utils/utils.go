@@ -1,3 +1,4 @@
+//Package utils consists of small helper functions.
 package utils
 
 import (
@@ -6,6 +7,7 @@ import (
 	"net/http"
 )
 
+//HandleError sends 500 response with error message in the body.
 func HandleError(w http.ResponseWriter, err error) {
 	log.Println(err)
 	var data = map[string]string{
@@ -14,6 +16,7 @@ func HandleError(w http.ResponseWriter, err error) {
 	Response(w, data, http.StatusInternalServerError)
 }
 
+//Response sends a http response using Content-Type application/json.
 func Response(w http.ResponseWriter, data interface{}, status int) {
 	w.Header().Set("Content-Type", "application/json")
 
