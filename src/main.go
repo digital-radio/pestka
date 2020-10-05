@@ -1,4 +1,4 @@
-//Package main package implements creation and start of http server.
+//Package main implements creation and start of http server.
 package main
 
 import (

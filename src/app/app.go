@@ -13,7 +13,7 @@ type App struct {
 	container container.Container
 }
 
-//New allows to creare a new App struct outside of package app.
+//New allows to create a new App struct outside of package app.
 func New(container container.Container) App {
 	return App{container}
 }

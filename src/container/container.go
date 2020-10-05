@@ -12,12 +12,12 @@ type Container struct {
 	Scan          Scan
 }
 
-//New allows to creare a new Container struct outside of package container. 
+//New allows to create a new Container struct outside of package container.
 func New() Container {
 	return Container{"wlan0", wlist.Scan}
 }
 
-//SetScan allows to override Scan. 
+//SetScan allows to override Scan.
 func (c *Container) SetScan(scan Scan) {
 	c.Scan = scan
 }
