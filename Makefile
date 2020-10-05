@@ -7,5 +7,14 @@ build-arm:
 run:
 	go run ./src/main.go
 
+style-fix:
+	gofmt -w src/
+
+style-check:
+	echo "FMT check\n"
+	gofmt -l ./src/
+	echo "\nLINT check\n"
+	golint -min_confidence 0 ./src/...
+
 test:
 	go test -v ./tests
