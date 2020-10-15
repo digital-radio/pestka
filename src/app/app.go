@@ -6,6 +6,8 @@ import (
 	"github.com/digital-radio/pestka/src/utils"
 	"github.com/gorilla/mux"
 	"net/http"
+    "io/ioutil"
+	"fmt"
 )
 
 //App allows to setup router.
@@ -22,6 +24,7 @@ func New(container container.Container) App {
 func (a *App) CreateRouter() *mux.Router {
 	var r = mux.NewRouter()
 	r.HandleFunc("/networks", a.getNetworks).Methods(http.MethodGet)
+	r.HandleFunc("/networks", a.createNetwork).Methods(http.MethodPost)
 	r.HandleFunc("/", a.notFound)
 	return r
 }
@@ -41,4 +44,16 @@ func (a *App) getNetworks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.Response(w, cells, http.StatusOK)
+}
+
+func (a *App) createNetwork(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()	
+	body, err := ioutil.ReadAll(r.Body)
+	
+	if err != nil {
+		utils.HandleError(w, err)
+		return
+	}
+	
+	fmt.Println("Body ", string(body))
 }
