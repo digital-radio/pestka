@@ -6,7 +6,8 @@ import (
 	"github.com/digital-radio/pestka/src/utils"
 	"github.com/gorilla/mux"
 	"net/http"
-    "io/ioutil"
+	"io/ioutil"
+	"encoding/json"
 	"fmt"
 )
 
@@ -46,14 +47,26 @@ func (a *App) getNetworks(w http.ResponseWriter, r *http.Request) {
 	utils.Response(w, cells, http.StatusOK)
 }
 
+type networkDetails struct {
+	Ssid string
+	Password string
+}
+
 func (a *App) createNetwork(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()	
-	body, err := ioutil.ReadAll(r.Body)
-	
+
+	body, err := ioutil.ReadAll(r.Body)	
 	if err != nil {
 		utils.HandleError(w, err)
 		return
 	}
 	
-	fmt.Println("Body ", string(body))
+	var n networkDetails
+	err = json.Unmarshal(body, &n)
+	if err != nil {
+        utils.HandleError(w, err)
+		return
+	}
+ 
+	fmt.Println(n)
 }
