@@ -6,22 +6,19 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/digital-radio/pestka/src/container"
 	"github.com/digital-radio/pestka/src/utils"
 	"gopkg.in/go-playground/validator.v9"
 )
 
-//Handler uses validate to validate request, uses service to perform business logic, uses container for other dependencies.
+//Handler uses validate to validate request, uses service to perform business logic
 type Handler struct {
-	validate  *validator.Validate
-	service   *Service
-	container *container.Container
+	validate *validator.Validate
+	service  *Service
 }
 
-//NewHandler creates network handler based on given validator, service and container.
-func NewHandler(v *validator.Validate, s *Service, c *container.Container) Handler {
-	return Handler{validate: v, service: s, container: c}
-
+//NewHandler creates network handler based on given validator and service.
+func NewHandler(v *validator.Validate, s *Service) Handler {
+	return Handler{validate: v, service: s}
 }
 
 //Expected input (request body) with validation rules.

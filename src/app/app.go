@@ -32,8 +32,8 @@ func (a *App) CreateRouter() *mux.Router {
 	var r = mux.NewRouter()
 
 	v := validator.New()
-	s := network.Service{}
-	nh := network.NewHandler(v, &s, &a.container)
+	s := network.NewService(&a.container)
+	nh := network.NewHandler(v, &s)
 
 	r.HandleFunc("/networks", a.getNetworks).Methods(http.MethodGet)
 	r.HandleFunc("/networks", nh.Create).Methods(http.MethodPost)
