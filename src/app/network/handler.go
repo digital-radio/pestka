@@ -1,4 +1,4 @@
-//Package netowrk handles request to create_network ((to connect to wifi) - it runs validation and service.
+//Package network handles request to create_network (to connect to wifi) - it validates request and runs service.
 package network
 
 import (
@@ -11,14 +11,16 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 )
 
-type networkHandler struct {
+//Handler uses validate to validate request, uses service to perform business logic, uses container for other dependencies.
+type Handler struct {
 	validate  *validator.Validate
 	service   *Service
 	container *container.Container
 }
 
-func NewNetworkHandler(v *validator.Validate, s *Service, c *container.Container) networkHandler {
-	return networkHandler{validate: v, service: s, container: c}
+//NewHandler creates network handler based on given validator, service and container.
+func NewHandler(v *validator.Validate, s *Service, c *container.Container) Handler {
+	return Handler{validate: v, service: s, container: c}
 
 }
 
@@ -28,13 +30,14 @@ type createNetworkRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
-//NetworkDetails contains domain details needed to create a new network.
-type NetworkDetails struct {
+//Details contains domain needed to connect to the network.
+type Details struct {
 	Ssid     string
 	Password string
 }
 
-func (h *networkHandler) Create(w http.ResponseWriter, r *http.Request) {
+//Create uses handler to validate request, maps input to domain and runs service to get the job done.
+func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
@@ -58,12 +61,11 @@ func (h *networkHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Map to domain entity.
-	n := NetworkDetails{
+	details := Details{
 		Ssid:     input.Ssid,
 		Password: input.Password,
 	}
 
-	//Finally pass the entity into service to get the job done.
-	h.service.Create(&n)
+	h.service.Create(&details)
 	return
 }

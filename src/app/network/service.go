@@ -1,13 +1,14 @@
-//Package netowrk handles request to create_network ((to connect to wifi) - it runs validation and service.
+//Package network handles request to create_network (to connect to wifi) - it validates request and runs service.
 package network
 
 import "fmt"
 
-//Service to create networkss
+//Service to create network
 type Service struct {
 }
 
-func (s *Service) Create(n *NetworkDetails) {
-	fmt.Println(*n)
+//Create connects to network specified in details
+func (s *Service) Create(details *Details) {
+	fmt.Println(*details)
 	return
 }

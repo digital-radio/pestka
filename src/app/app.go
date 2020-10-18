@@ -27,14 +27,14 @@ func New(container container.Container) App {
 	return App{container}
 }
 
-//CreateRouter creates router and maps urls to functions.
+//CreateRouter creates router and maps urls to handlers.
 func (a *App) CreateRouter() *mux.Router {
 	var r = mux.NewRouter()
 
 	v := validator.New()
 	s := network.Service{}
+	nh := network.NewHandler(v, &s, &a.container)
 
-	nh := network.NewNetworkHandler(v, &s, &a.container)
 	r.HandleFunc("/networks", a.getNetworks).Methods(http.MethodGet)
 	r.HandleFunc("/networks", nh.Create).Methods(http.MethodPost)
 	r.HandleFunc("/", a.notFound)
