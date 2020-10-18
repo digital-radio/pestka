@@ -4,11 +4,11 @@ package app
 import (
 	"net/http"
 
+	"github.com/digital-radio/pestka/src/app/network"
 	"github.com/digital-radio/pestka/src/container"
-	"github.com/digital-radio/pestka/src/network/handler"
-	"github.com/digital-radio/pestka/src/network/service"
 	"github.com/digital-radio/pestka/src/utils"
 	"github.com/gorilla/mux"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 //App allows to setup router.
@@ -32,9 +32,9 @@ func (a *App) CreateRouter() *mux.Router {
 	var r = mux.NewRouter()
 
 	v := validator.New()
-	s := service.New()
+	s := network.Service{}
 
-	nh := handler.NewNetworkHandler(v, s, a.container)
+	nh := network.NewNetworkHandler(v, &s, &a.container)
 	r.HandleFunc("/networks", a.getNetworks).Methods(http.MethodGet)
 	r.HandleFunc("/networks", nh.Create).Methods(http.MethodPost)
 	r.HandleFunc("/", a.notFound)

@@ -1,20 +1,13 @@
-//Package service business logic of endpoint used to create network (to connect to wifi).
-package service
+//Package netowrk handles request to create_network ((to connect to wifi) - it runs validation and service.
+package network
 
-import (
-	"fmt"
+import "fmt"
 
-	"github.com/digital-radio/pestka/src/network/handler"
-)
-
-type service struct {
+//Service to create networkss
+type Service struct {
 }
 
-//New allows to create a new Service struct outside of package app.
-func New() service {
-	return service{}
-}
-
-func (s *service) Create(n handler.NetworkDetails) {
-	fmt.Println(n)
+func (s *Service) Create(n *NetworkDetails) {
+	fmt.Println(*n)
+	return
 }
