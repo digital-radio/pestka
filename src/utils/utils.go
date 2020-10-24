@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/digital-radio/pestka/src/app/exceptions"
+	"github.com/digital-radio/pestka/src/app"
 )
 
 //HandleError sends 500 response with error message in the body.
@@ -17,7 +17,7 @@ func HandleError(w http.ResponseWriter, err error) {
 		"message": err.Error(),
 	}
 
-	if errors.Is(err, exceptions.AppError) {
+	if errors.Is(err, app.AppError) {
 		Response(w, data, err.Code)
 		return
 
