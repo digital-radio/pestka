@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/digital-radio/pestka/src/app/exceptions"
 	"github.com/digital-radio/pestka/src/utils"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -40,21 +41,21 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		utils.HandleError(w, err)
-		return
+		appError := exceptions.AppError{Err: err, Code: http.BadRequestError, Message: "Bad request: failed to read the body"}
+		return utils.HandleError(w, appError)
 	}
 
 	input := createNetworkRequest{}
 
 	err = json.Unmarshal(body, &input)
 	if err != nil {
-		utils.HandleError(w, err)
-		return
+		appError := exceptions.AppError{Err: err, Code: http.BadRequestError, Message: "Bad request: not a json"}
+		return utils.HandleError(w, appError)
 	}
 
 	if err := h.validate.Struct(input); err != nil {
-		utils.HandleError(w, err)
-		return
+		appError := exceptions.AppError{Err: err, Code: http.BadRequestError, Message: "Bad request: invalid input - " + err.Error()}
+		return utils.HandleError(w, appError)
 	}
 
 	//Map to domain entity.

@@ -3,8 +3,11 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
+
+	"github.com/digital-radio/pestka/src/app/exceptions"
 )
 
 //HandleError sends 500 response with error message in the body.
@@ -13,6 +16,13 @@ func HandleError(w http.ResponseWriter, err error) {
 	var data = map[string]string{
 		"message": err.Error(),
 	}
+
+	if errors.Is(err, exceptions.AppError) {
+		Response(w, data, err.Code)
+		return
+
+	}
+
 	Response(w, data, http.StatusInternalServerError)
 }
 

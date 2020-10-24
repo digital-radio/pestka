@@ -16,12 +16,6 @@ type App struct {
 	container container.Container
 }
 
-/*type appError struct {
-    Error   error
-    Message string
-    Code    int
-}*/
-
 //New allows to create a new App struct outside of package app.
 func New(container container.Container) App {
 	return App{container}
