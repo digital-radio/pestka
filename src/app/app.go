@@ -6,7 +6,6 @@ import (
 
 	"github.com/digital-radio/pestka/src/app/network"
 	"github.com/digital-radio/pestka/src/container"
-	customerrors "github.com/digital-radio/pestka/src/custom_errors"
 	"github.com/digital-radio/pestka/src/utils"
 	"github.com/gorilla/mux"
 	"gopkg.in/go-playground/validator.v9"
@@ -30,7 +29,7 @@ func (a *App) CreateRouter() *mux.Router {
 	s := network.NewService(&a.container)
 	nh := network.NewHandler(v, &s)
 
-	r.HandleFunc("/networks", a.getNetworks).Methods(http.MethodGet)
+	r.HandleFunc("/networks", nh.Get).Methods(http.MethodGet)
 	r.HandleFunc("/networks", nh.Create).Methods(http.MethodPost)
 	r.HandleFunc("/", a.notFound)
 	return r
@@ -41,16 +40,4 @@ func (a *App) notFound(w http.ResponseWriter, r *http.Request) {
 		"message": "not found",
 	}
 	utils.Response(w, data, http.StatusNotFound)
-}
-
-func (a *App) getNetworks(w http.ResponseWriter, r *http.Request) {
-	cells, err := a.container.Scan(a.container.InterfaceName)
-	if err != nil {
-		appError := customerrors.AppError{Err: err, Code: http.StatusInternalServerError, Message: "Internal Server Error"}
-
-		utils.HandleError(w, &appError)
-		return
-	}
-
-	utils.Response(w, cells, http.StatusOK)
 }

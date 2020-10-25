@@ -14,7 +14,7 @@ import (
 func HandleError(w http.ResponseWriter, err *customerrors.AppError) {
 	log.Println(err)
 	var data = map[string]string{
-		"message": err.Error(),
+		"message": err.Message,
 	}
 
 	var e *customerrors.AppError

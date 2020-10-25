@@ -34,7 +34,20 @@ type Details struct {
 	Password string
 }
 
-//Create uses handler to validate request, maps input to domain and runs service to get the job done.
+//Get runs service to get networks and returns response.
+func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
+	cells, err := h.service.Get()
+
+	if err != nil {
+		appError := customerrors.AppError{Err: err, Code: http.StatusInternalServerError, Message: "Internal Server Error"}
+		utils.HandleError(w, &appError)
+		return
+	}
+
+	utils.Response(w, cells, http.StatusOK)
+}
+
+//Create uses handler to validate request, maps input to domain, runs service to create network and returns response.
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
@@ -68,5 +81,6 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.service.Create(&details)
+	utils.Response(w, "OK", http.StatusOK)
 	return
 }
