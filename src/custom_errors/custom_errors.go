@@ -1,5 +1,5 @@
-//Package app implements http server api.
-package app
+//Package customerrors implements errors that can be thrown
+package customerrors
 
 //AppError is an error thrown by app with code and message that should be returned in http response
 type AppError struct {

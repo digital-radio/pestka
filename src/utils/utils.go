@@ -7,17 +7,19 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/digital-radio/pestka/src/app"
+	customerrors "github.com/digital-radio/pestka/src/custom_errors"
 )
 
 //HandleError sends 500 response with error message in the body.
-func HandleError(w http.ResponseWriter, err error) {
+func HandleError(w http.ResponseWriter, err *customerrors.AppError) {
 	log.Println(err)
 	var data = map[string]string{
 		"message": err.Error(),
 	}
 
-	if errors.Is(err, app.AppError) {
+	var e *customerrors.AppError
+
+	if errors.As(err, &e) {
 		Response(w, data, err.Code)
 		return
 

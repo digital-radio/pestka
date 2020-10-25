@@ -6,6 +6,7 @@ import (
 
 	"github.com/digital-radio/pestka/src/app/network"
 	"github.com/digital-radio/pestka/src/container"
+	customerrors "github.com/digital-radio/pestka/src/custom_errors"
 	"github.com/digital-radio/pestka/src/utils"
 	"github.com/gorilla/mux"
 	"gopkg.in/go-playground/validator.v9"
@@ -45,7 +46,9 @@ func (a *App) notFound(w http.ResponseWriter, r *http.Request) {
 func (a *App) getNetworks(w http.ResponseWriter, r *http.Request) {
 	cells, err := a.container.Scan(a.container.InterfaceName)
 	if err != nil {
-		utils.HandleError(w, err)
+		appError := customerrors.AppError{Err: err, Code: http.StatusInternalServerError, Message: "Internal Server Error"}
+
+		utils.HandleError(w, &appError)
 		return
 	}
 

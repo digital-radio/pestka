@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/digital-radio/pestka/src/app/app"
+	customerrors "github.com/digital-radio/pestka/src/custom_errors"
 	"github.com/digital-radio/pestka/src/utils"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -41,21 +41,24 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		appError := app.AppError{Err: err, Code: http.BadRequestError, Message: "Bad request: failed to read the body"}
-		return utils.HandleError(w, appError)
+		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: failed to read the body"}
+		utils.HandleError(w, &appError)
+		return
 	}
 
 	input := createNetworkRequest{}
 
 	err = json.Unmarshal(body, &input)
 	if err != nil {
-		appError := app.AppError{Err: err, Code: http.BadRequestError, Message: "Bad request: not a json"}
-		return utils.HandleError(w, appError)
+		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: not a json"}
+		utils.HandleError(w, &appError)
+		return
 	}
 
 	if err := h.validate.Struct(input); err != nil {
-		appError := app.AppError{Err: err, Code: http.BadRequestError, Message: "Bad request: invalid input - " + err.Error()}
-		return utils.HandleError(w, appError)
+		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: invalid input - " + err.Error()}
+		utils.HandleError(w, &appError)
+		return
 	}
 
 	//Map to domain entity.
