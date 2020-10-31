@@ -2,23 +2,22 @@
 package network
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
 	customerrors "github.com/digital-radio/pestka/src/custom_errors"
 	"github.com/digital-radio/pestka/src/utils"
-	"gopkg.in/go-playground/validator.v9"
+	"github.com/digital-radio/pestka/src/validation"
 )
 
 //Handler uses validate to validate request, uses service to perform business logic
 type Handler struct {
-	validate *validator.Validate
+	validate *validation.Validator
 	service  *Service
 }
 
 //NewHandler creates network handler based on given validator and service.
-func NewHandler(v *validator.Validate, s *Service) Handler {
+func NewHandler(v *validation.Validator, s *Service) Handler {
 	return Handler{validate: v, service: s}
 }
 
@@ -61,18 +60,24 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	input := createNetworkRequest{}
 
-	err = json.Unmarshal(body, &input)
+	err = h.validate.CleanJSON(body, input)
 	if err != nil {
-		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: not a json"}
-		utils.HandleError(w, &appError)
+		utils.HandleError(w, err)
 		return
 	}
 
-	if err := h.validate.Struct(input); err != nil {
-		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: invalid input - " + err.Error()}
-		utils.HandleError(w, &appError)
-		return
-	}
+	// err = json.Unmarshal(body, &input)
+	// if err != nil {
+	// 	appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: not a json"}
+	// 	utils.HandleError(w, &appError)
+	// 	return
+	// }
+
+	// if err := h.validate.Struct(input); err != nil {
+	// 	appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: invalid input - " + err.Error()}
+	// 	utils.HandleError(w, &appError)
+	// 	return
+	// }
 
 	//Map to domain entity.
 	details := Details{

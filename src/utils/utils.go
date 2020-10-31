@@ -11,21 +11,28 @@ import (
 )
 
 //HandleError sends 500 response with error message in the body.
-func HandleError(w http.ResponseWriter, err *customerrors.AppError) {
+func HandleError(w http.ResponseWriter, err error) {
 	log.Println(err)
+
+	var e *customerrors.AppError
+	if errors.As(err, &e) {
+		handleAppError(w, e)
+		return
+	}
+
+	var data = map[string]string{
+		"message": err.Error(),
+	}
+
+	Response(w, data, http.StatusInternalServerError)
+}
+
+func handleAppError(w http.ResponseWriter, err *customerrors.AppError) {
 	var data = map[string]string{
 		"message": err.Message,
 	}
 
-	var e *customerrors.AppError
-
-	if errors.As(err, &e) {
-		Response(w, data, err.Code)
-		return
-
-	}
-
-	Response(w, data, http.StatusInternalServerError)
+	Response(w, data, err.Code)
 }
 
 //Response sends a http response using Content-Type application/json.
