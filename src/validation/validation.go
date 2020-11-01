@@ -3,6 +3,7 @@ package validation
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"reflect"
 
@@ -14,21 +15,19 @@ import (
 type Validator struct {
 }
 
-//CleanJSON verifies if body is json and loads it to the required structure - if not possible it raises AppError
+//CleanJSON verifies if body is json and loads it to the required structure - if not possible it raises AppError. Parameter 'input' must be a pointer.
 func (v *Validator) CleanJSON(body []byte, input interface{}) error {
 
 	var validate *validator.Validate = validator.New()
 
-	//FIXME Dynamic input not working
-	aType := reflect.TypeOf(input)
+	inputKind := reflect.ValueOf(input).Kind()
+	if inputKind != reflect.Ptr {
+		err := fmt.Errorf("input assertion error in: Validator -> CleanJson. Input is not a pointer - kind: %v!\n", inputKind)
+		appError := customerrors.AppError{Err: err, Code: http.StatusInternalServerError, Message: "Internal server error"}
+		return &appError
+	}
 
-	elType := aType.Elem()
-
-	inputPointer := reflect.New(elType).Interface()
-
-	//FIXME Dynamic input not working
-
-	err := json.Unmarshal(body, inputPointer)
+	err := json.Unmarshal(body, input)
 	if err != nil {
 		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: not a json"}
 		return &appError

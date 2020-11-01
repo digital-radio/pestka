@@ -60,24 +60,11 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	input := createNetworkRequest{}
 
-	err = h.validate.CleanJSON(body, input)
+	err = h.validate.CleanJSON(body, &input)
 	if err != nil {
 		utils.HandleError(w, err)
 		return
 	}
-
-	// err = json.Unmarshal(body, &input)
-	// if err != nil {
-	// 	appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: not a json"}
-	// 	utils.HandleError(w, &appError)
-	// 	return
-	// }
-
-	// if err := h.validate.Struct(input); err != nil {
-	// 	appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: invalid input - " + err.Error()}
-	// 	utils.HandleError(w, &appError)
-	// 	return
-	// }
 
 	//Map to domain entity.
 	details := Details{
