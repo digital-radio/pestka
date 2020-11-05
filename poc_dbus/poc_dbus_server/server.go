@@ -25,7 +25,7 @@ func main() {
 		panic(err)
 	}
 
-	reply, err := conn.RequestName("org.freedesktop.Notifications2", dbus.NameFlagDoNotQueue)
+	reply, err := conn.RequestName("pl.digital_radio", dbus.NameFlagDoNotQueue)
 	if err != nil {
 		panic(err)
 	}
@@ -35,6 +35,6 @@ func main() {
 
 	s := Server{id: 0}
 
-	conn.Export(s, "/org/freedesktop/Notifications", "org.freedesktop.Notifications2")
+	conn.Export(s, "/malina", "pl.digital_radio")
 	select {}
 }
