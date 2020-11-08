@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	fmt.Printf("====  CALL ====")
 
 	conn, err := dbus.SessionBus()
 	if err != nil {
@@ -16,7 +15,6 @@ func main() {
 
 	// func (conn *Conn) Object(dest string, path ObjectPath) *Object
 	obj := conn.Object("pl.digital_radio", "/malina")
-	fmt.Printf("====  CALL ====")
 
 	// Interface from the specification:
 	// UINT32 org.freedesktop.Notifications.Notify (STRING app_name, UINT32 replaces_id, STRING app_icon, STRING summary, STRING body, ARRAY actions, DICT hints, INT32 expire_timeout);
@@ -26,6 +24,6 @@ func main() {
 	if call.Err != nil {
 		panic(call.Err)
 	}
-	fmt.Printf("====  CALL ====\n %s \n", call)
+	fmt.Printf("====  CALL ====\n %s \n", call.Body)
 
 }
