@@ -29,7 +29,7 @@ func TestPostNetworksList(t *testing.T) {
 	a := assert.New(t)
 	a.Equal(200, w.Code)
 	a.Equal(
-		"OK",
+		`{"message":"OK"}`,
 		w.Body.String(),
 	)
 }

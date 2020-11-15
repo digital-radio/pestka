@@ -46,6 +46,10 @@ func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	utils.Response(w, cells, http.StatusOK)
 }
 
+type responseMessage struct {
+	Message string `json:"message"`
+}
+
 //Create uses handler to validate request, maps input to domain, runs service to create network and returns response.
 func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
@@ -73,6 +77,6 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.service.Create(&details)
-	utils.Response(w, "OK", http.StatusOK)
+	utils.Response(w, responseMessage{Message: "OK"}, http.StatusOK)
 	return
 }
