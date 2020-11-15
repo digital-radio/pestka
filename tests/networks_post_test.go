@@ -15,7 +15,7 @@ type MockedScan struct {
 	container.Scan
 }
 
-func TestPostNetworksList(t *testing.T) {
+func TestPostNetworks(t *testing.T) {
 	// given
 
 	bodyReader := strings.NewReader(`{"ssid": "test_ssid", "password": "test_password"}`)
@@ -32,4 +32,34 @@ func TestPostNetworksList(t *testing.T) {
 		`{"message":"OK"}`,
 		w.Body.String(),
 	)
+}
+
+func TestPostNetworksMissingPassword(t *testing.T) {
+	// given
+
+	bodyReader := strings.NewReader(`{"ssid": "test_ssid"}`)
+
+	app := TestApp{}
+
+	// when
+	w := app.MakeRequest("POST", "/networks", bodyReader)
+
+	// then
+	a := assert.New(t)
+	a.Equal(400, w.Code)
+}
+
+func TestPostNetworksMissingSsid(t *testing.T) {
+	// given
+
+	bodyReader := strings.NewReader(`{"password": "test_password"}`)
+
+	app := TestApp{}
+
+	// when
+	w := app.MakeRequest("POST", "/networks", bodyReader)
+
+	// then
+	a := assert.New(t)
+	a.Equal(400, w.Code)
 }
