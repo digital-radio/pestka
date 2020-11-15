@@ -16,6 +16,7 @@ type TestApp struct {
 func (a *TestApp) MakeRequest(method, target string, body io.Reader) *httptest.ResponseRecorder {
 	var application = app.New(a.Container)
 	var router = application.CreateRouter()
+	//FIXME Co to robi ?
 	var w = httptest.NewRecorder()
 	router.ServeHTTP(w, httptest.NewRequest(method, target, body))
 	return w
