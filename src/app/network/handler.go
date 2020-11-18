@@ -64,9 +64,10 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	input := createNetworkRequest{}
 
-	err = h.validate.CleanJSON(body, &input)
+	err = h.validate.ParseAndValidateJSON(body, &input)
 	if err != nil {
-		utils.HandleError(w, err)
+		appError := customerrors.AppError{Err: err, Code: http.StatusBadRequest, Message: "Bad request: " + err.Error()}
+		utils.HandleError(w, &appError)
 		return
 	}
 
