@@ -10,7 +10,7 @@ import (
 
 func TestGetNetworksList(t *testing.T) {
 	// given
-	app := TestApp{}
+	app := CreateTestApp()
 	app.Container.SetScan(func(interfaceName string) ([]wlist.Cell, error) {
 		return []wlist.Cell{
 			{

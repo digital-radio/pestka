@@ -4,23 +4,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/digital-radio/pestka/src/container"
 	. "github.com/digital-radio/pestka/tests"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
-
-type MockedScan struct {
-	mock.Mock
-	container.Scan
-}
 
 func TestPostNetworks(t *testing.T) {
 	// given
-
 	bodyReader := strings.NewReader(`{"ssid": "test_ssid", "password": "test_password"}`)
 
-	app := TestApp{}
+	app := CreateTestApp()
 
 	// when
 	w := app.MakeRequest("POST", "/networks", bodyReader)

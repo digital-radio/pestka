@@ -13,6 +13,11 @@ type TestApp struct {
 	Container container.Container
 }
 
+//New allows to create a new Container struct outside of package container.
+func CreateTestApp() TestApp {
+	return TestApp{container.New()}
+}
+
 func (a *TestApp) MakeRequest(method, target string, body io.Reader) *httptest.ResponseRecorder {
 	var application = app.New(a.Container)
 	var router = application.CreateRouter()

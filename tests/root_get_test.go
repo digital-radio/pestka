@@ -9,7 +9,7 @@ import (
 
 func TestGetRoot(t *testing.T) {
 	// given
-	app := TestApp{}
+	app := CreateTestApp()
 
 	// when
 	w := app.MakeRequest("GET", "/", nil)
