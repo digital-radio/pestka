@@ -14,6 +14,11 @@ func TestPostNetworks(t *testing.T) {
 
 	app := CreateTestApp()
 
+	dbusFactoryMock{}
+	dbusConnectionMock{}
+
+	app.Container.SetDbusFactory(dbusFactoryMock)
+
 	// when
 	w := app.MakeRequest("POST", "/networks", bodyReader)
 
