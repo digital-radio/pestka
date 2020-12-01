@@ -3,7 +3,7 @@ package container
 
 import (
 	wlist "github.com/MonkeyBuisness/golang-iwlist"
-	"github.com/digital-radio/pestka/src/dbus"
+	dbusclient "github.com/digital-radio/pestka/src/dbus_client"
 )
 
 //Scan returns a list of available wireless netowrks.
@@ -13,15 +13,13 @@ type Scan func(interfaceName string) ([]wlist.Cell, error)
 type Container struct {
 	InterfaceName string
 	Scan          Scan
-	DbusFactory   dbus.DbusFactory
+	DbusFactory   dbusclient.DbusFactory
 }
 
 //New allows to create a new Container struct outside of package container.
 func New() Container {
-	return Container{"wlan0", wlist.Scan, dbus.DbusFactory{}}
+	return Container{"wlan0", wlist.Scan, dbusclient.DbusFactory{}}
 }
-
-//TODO Uniwersalna metoda do podmiany
 
 //SetScan allows to override Scan.
 func (c *Container) SetScan(scan Scan) {
@@ -29,6 +27,6 @@ func (c *Container) SetScan(scan Scan) {
 }
 
 //SetDbusFactory allows to override DbusFactory.
-func (c *Container) SetDbusFactory(dbusFactory dbus.DbusFactory) {
+func (c *Container) SetDbusFactory(dbusFactory dbusclient.DbusFactory) {
 	c.DbusFactory = dbusFactory
 }

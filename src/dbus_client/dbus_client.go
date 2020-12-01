@@ -1,5 +1,5 @@
-//Package dbus implements handling of the dbus
-package dbus
+//Package dbus_client implements sending messages via dbus
+package dbusclient
 
 import (
 	"github.com/godbus/dbus"
@@ -7,8 +7,7 @@ import (
 
 type DbusFactory struct{}
 
-
-func (*DbusFactory) CreateDbusConnection() {
+func (*DbusFactory) CreateDbusConnection() dbus.BusObject {
 	conn, err := dbus.SessionBus()
 	if err != nil {
 		panic(err)

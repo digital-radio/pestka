@@ -77,7 +77,12 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		Password: input.Password,
 	}
 
-	h.service.Create(&details)
+	err = h.service.Create(&details)
+	if err != nil {
+		utils.HandleError(w, err)
+		return
+	}
+
 	utils.Response(w, responseMessage{Message: "OK"}, http.StatusOK)
 	return
 }

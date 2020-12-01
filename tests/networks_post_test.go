@@ -6,18 +6,27 @@ import (
 
 	. "github.com/digital-radio/pestka/tests"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestPostNetworks(t *testing.T) {
 	// given
 	bodyReader := strings.NewReader(`{"ssid": "test_ssid", "password": "test_password"}`)
 
-	app := CreateTestApp()
+	type dbusFactoryMock struct {
+		mock.Mock
+	}
 
-	dbusFactoryMock{}
+	type dbusConnectionMock struct {
+		mock.Mock
+	}
+
+	dbusFactory := dbusFactoryMock{}
 	dbusConnectionMock{}
 
-	app.Container.SetDbusFactory(dbusFactoryMock)
+	app := CreateTestApp()
+
+	app.Container.SetDbusFactory(dbusFactory)
 
 	// when
 	w := app.MakeRequest("POST", "/networks", bodyReader)
