@@ -4,25 +4,36 @@ import (
 	"strings"
 	"testing"
 
+	dbusclient "github.com/digital-radio/pestka/src/dbus_client"
 	. "github.com/digital-radio/pestka/tests"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
 
+type busConnectionMock struct {
+	mock.Mock
+}
+
+func (busConnectionMock) Call(method string, message string) (string, error) {
+	return "a", nil
+}
+
+type busFactoryMock struct {
+	mock.Mock
+}
+
+func (*busFactoryMock) CreateBusObject() dbusclient.BusObjectInterface {
+	var bcm dbusclient.BusObjectInterface = new(busConnectionMock)
+	bcm.On("Call", "{\"ssid\": \"test_ssid\", \"password\": \"test_password\"}").Return(("b"))
+	return bcm
+
+}
+
 func TestPostNetworks(t *testing.T) {
 	// given
 	bodyReader := strings.NewReader(`{"ssid": "test_ssid", "password": "test_password"}`)
 
-	type dbusFactoryMock struct {
-		mock.Mock
-	}
-
-	type dbusConnectionMock struct {
-		mock.Mock
-	}
-
-	dbusFactory := dbusFactoryMock{}
-	dbusConnectionMock{}
+	dbusFactory := new(dbusFactoryMock)
 
 	app := CreateTestApp()
 

@@ -17,12 +17,12 @@ import (
 type Service struct {
 	InterfaceName string
 	Scan          container.Scan
-	DbusFactory   dbusclient.DbusFactory
+	BusFactory    dbusclient.BusFactoryInterface
 }
 
 //NewService allows to create a new Service struct outside of package app.
 func NewService(container *container.Container) Service {
-	return Service{InterfaceName: container.InterfaceName, Scan: container.Scan, DbusFactory: container.DbusFactory}
+	return Service{InterfaceName: container.InterfaceName, Scan: container.Scan, BusFactory: dbusclient.BusFactory{}}
 }
 
 func marshallJSON(input interface{}) string {
@@ -40,22 +40,22 @@ func marshallJSON(input interface{}) string {
 func (s *Service) Create(details *Details) error {
 	fmt.Println(*details)
 
-	connection := s.DbusFactory.CreateDbusConnection()
+	busObject := s.BusFactory.CreateBusObject()
 	message := marshallJSON(details)
-	// call := connection.Call("pl.digital_radio.Notify", 0, "c¼h", uint32(0), "", "Hallo Chaostreff!", "Ich begrüße euch herzlich zu meiner c¼h!", []string{}, map[string]dbus.Variant{}, int32(1000))
 
-	call := connection.Call("pl.digital_radio.Notify", 0, message)
-	if call.Err != nil {
-		panic(call.Err)
+	responseBody, err := busObject.Call("pl.digital_radio.Notify", message)
+	if err != nil {
+		panic(err)
 	}
-	fmt.Printf("====  CALL ====\n %s \n", call.Body)
+
+	fmt.Printf(responseBody)
 
 	result := true
 	if result == true {
 		return nil
 	}
 
-	return errors.New("failed to connect")
+	return errors.New("failed to connect to wifi")
 }
 
 //Get finds and lists networks in the neighbourhood
