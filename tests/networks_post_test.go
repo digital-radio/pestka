@@ -1,6 +1,7 @@
 package tests_test
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -22,8 +23,10 @@ type busFactoryMock struct {
 	mock.Mock
 }
 
-func (*busFactoryMock) CreateBusObject() dbusclient.BusObjectInterface {
-	var bcm dbusclient.BusObjectInterface = new(busConnectionMock)
+func (busFactoryMock) CreateBusObject() dbusclient.BusObjectInterface {
+	bcm := new(busConnectionMock)
+	fmt.Printf("Create bus object !!! \n")
+
 	bcm.On("Call", "{\"ssid\": \"test_ssid\", \"password\": \"test_password\"}").Return(("b"))
 	return bcm
 
@@ -33,11 +36,11 @@ func TestPostNetworks(t *testing.T) {
 	// given
 	bodyReader := strings.NewReader(`{"ssid": "test_ssid", "password": "test_password"}`)
 
-	dbusFactory := new(dbusFactoryMock)
+	bfm := new(busFactoryMock)
 
 	app := CreateTestApp()
 
-	app.Container.SetDbusFactory(dbusFactory)
+	app.Container.SetBusFactory(bfm)
 
 	// when
 	w := app.MakeRequest("POST", "/networks", bodyReader)

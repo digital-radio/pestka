@@ -22,7 +22,7 @@ type Service struct {
 
 //NewService allows to create a new Service struct outside of package app.
 func NewService(container *container.Container) Service {
-	return Service{InterfaceName: container.InterfaceName, Scan: container.Scan, BusFactory: dbusclient.BusFactory{}}
+	return Service{InterfaceName: container.InterfaceName, Scan: container.Scan, BusFactory: container.BusFactory}
 }
 
 func marshallJSON(input interface{}) string {
@@ -41,6 +41,7 @@ func (s *Service) Create(details *Details) error {
 	fmt.Println(*details)
 
 	busObject := s.BusFactory.CreateBusObject()
+
 	message := marshallJSON(details)
 
 	responseBody, err := busObject.Call("pl.digital_radio.Notify", message)
@@ -48,7 +49,7 @@ func (s *Service) Create(details *Details) error {
 		panic(err)
 	}
 
-	fmt.Printf(responseBody)
+	fmt.Printf("responseBody: " + responseBody)
 
 	result := true
 	if result == true {
