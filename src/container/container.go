@@ -13,12 +13,12 @@ type Scan func(interfaceName string) ([]wlist.Cell, error)
 type Container struct {
 	InterfaceName string
 	Scan          Scan
-	BusFactory   dbusclient.BusFactoryInterface
+	BusFactory    dbusclient.BusFactoryInterface
 }
 
 //New allows to create a new Container struct outside of package container.
 func New() Container {
-	return Container{"wlan0", wlist.Scan, dbusclient.BusFactory{}}
+	return Container{"wlan0", wlist.Scan, &dbusclient.BusFactory{}}
 }
 
 //SetScan allows to override Scan.
@@ -26,7 +26,7 @@ func (c *Container) SetScan(scan Scan) {
 	c.Scan = scan
 }
 
-//SetDbusFactory allows to override BusFactory.
+//SetBusFactory allows to override BusFactory.
 func (c *Container) SetBusFactory(busFactory dbusclient.BusFactoryInterface) {
 	c.BusFactory = busFactory
 }

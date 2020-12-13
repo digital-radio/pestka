@@ -4,7 +4,6 @@ package network
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 
 	wlist "github.com/MonkeyBuisness/golang-iwlist"
@@ -38,7 +37,6 @@ func marshallJSON(input interface{}) string {
 
 //Create connects to network specified in details
 func (s *Service) Create(details *Details) error {
-	fmt.Println(*details)
 
 	busObject := s.BusFactory.CreateBusObject()
 
@@ -49,10 +47,7 @@ func (s *Service) Create(details *Details) error {
 		panic(err)
 	}
 
-	fmt.Printf("responseBody: " + responseBody)
-
-	result := true
-	if result == true {
+	if responseBody == "OK" {
 		return nil
 	}
 
