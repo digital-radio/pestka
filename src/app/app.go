@@ -1,5 +1,3 @@
-
-
 //Package app implements http server api.
 package app
 
