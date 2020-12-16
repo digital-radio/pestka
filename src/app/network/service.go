@@ -4,7 +4,7 @@ package network
 import (
 	"encoding/json"
 	"errors"
-	"log"
+	"fmt"
 
 	wlist "github.com/MonkeyBuisness/golang-iwlist"
 	dbusclient "github.com/digital-radio/pestka/src/dbus_client"
@@ -24,15 +24,14 @@ func NewService(container *container.Container) Service {
 	return Service{InterfaceName: container.InterfaceName, Scan: container.Scan, BusFactory: container.BusFactory}
 }
 
-func marshallJSON(input interface{}) string {
+func marshallJSON(input interface{}) (string, error) {
 	bytes, err := json.Marshal(input)
 
 	if err != nil {
-		log.Println(err)
-		return ""
+		return "", err
 	}
 
-	return string(bytes)
+	return string(bytes), nil
 }
 
 //Create connects to network specified in details
@@ -40,11 +39,14 @@ func (s *Service) Create(details *Details) error {
 
 	busObject := s.BusFactory.CreateBusObject()
 
-	message := marshallJSON(details)
+	message, err := marshallJSON(details)
+	if err != nil {
+		return fmt.Errorf("failed to connect to wifi - marshalling message: %w", err)
+	}
 
 	responseBody, err := busObject.Call("pl.digital_radio.Notify", message)
 	if err != nil {
-		panic(err)
+		return fmt.Errorf("failed to connect to wifi - calling via dbus: %w", err)
 	}
 
 	if responseBody == "OK" {
