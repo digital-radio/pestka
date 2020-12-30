@@ -35,10 +35,10 @@ func TestPostNetworks(t *testing.T) {
 	// Request is accepted and completed - wifi is turned on via dbus.
 
 	// given
-	bodyReader := strings.NewReader(`{"Ssid": "test_ssid", "Password": "test_password"}`)
+	bodyReader := strings.NewReader(`{"ssid": "test_ssid", "password": "test_password"}`)
 
 	bcm := new(busConnectionMock)
-	bcm.On("Call", "pl.digitalradio.Notify", "{\"Ssid\":\"test_ssid\",\"Password\":\"test_password\"}").Return("OK", nil)
+	bcm.On("Call", "pl.digitalradio.wifi_on", "{\"ssid\":\"test_ssid\",\"password\":\"test_password\"}").Return(`{"code": "OK"}`, nil)
 	bfm := busFactoryMock{bcm: bcm}
 
 	app := CreateTestApp()
@@ -63,7 +63,7 @@ func TestPostNetworksMissingPassword(t *testing.T) {
 	// Request is validated and if 'Password' is missing, it does not try to turn on wifi via dbus.
 
 	// given
-	bodyReader := strings.NewReader(`{"Ssid": "test_ssid"}`)
+	bodyReader := strings.NewReader(`{"ssid": "test_ssid"}`)
 
 	bcm := new(busConnectionMock)
 	bfm := busFactoryMock{bcm: bcm}
@@ -90,7 +90,7 @@ func TestPostNetworksMissingSsid(t *testing.T) {
 	// Request is validated and if 'Ssid' is missing, it does not try to turn on wifi via dbus.
 
 	// given
-	bodyReader := strings.NewReader(`{"Password": "test_password"}`)
+	bodyReader := strings.NewReader(`{"password": "test_password"}`)
 
 	bcm := new(busConnectionMock)
 	bfm := busFactoryMock{bcm: bcm}

@@ -29,8 +29,8 @@ type createNetworkRequest struct {
 
 //Details contains domain needed to connect to the network.
 type Details struct {
-	Ssid     string
-	Password string
+	Ssid     string `json:"ssid"`
+	Password string `json:"password"`
 }
 
 //Get runs service to get networks and returns response.
