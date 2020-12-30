@@ -24,7 +24,7 @@ type BusObject struct {
 
 //Call sends messages via dbus.
 func (bo *BusObject) Call(method string, message string) (string, error) {
-	// call := connection.Call("pl.digital_radio.Notify", 0, "c¼h", uint32(0), "", "Hallo Chaostreff!", "Ich begrüße euch herzlich zu meiner c¼h!", []string{}, map[string]dbus.Variant{}, int32(1000))
+	// call := connection.Call("pl.digitalradio.Notify", 0, "c¼h", uint32(0), "", "Hallo Chaostreff!", "Ich begrüße euch herzlich zu meiner c¼h!", []string{}, map[string]dbus.Variant{}, int32(1000))
 	var call *dbus.Call = bo.object.Call(method, 0, message)
 	if call.Err != nil {
 		return "", call.Err
@@ -50,7 +50,7 @@ func (*BusFactory) CreateBusObject() BusObjectInterface {
 	}
 
 	// func (conn *Conn) Object(dest string, path ObjectPath) *Object
-	var obj dbus.BusObject = conn.Object("pl.digital_radio", "/malina")
+	var obj dbus.BusObject = conn.Object("pl.digitalradio", "/malina")
 
 	return &BusObject{object: obj}
 }

@@ -38,7 +38,7 @@ func TestPostNetworks(t *testing.T) {
 	bodyReader := strings.NewReader(`{"Ssid": "test_ssid", "Password": "test_password"}`)
 
 	bcm := new(busConnectionMock)
-	bcm.On("Call", "pl.digital_radio.Notify", "{\"Ssid\":\"test_ssid\",\"Password\":\"test_password\"}").Return("OK", nil)
+	bcm.On("Call", "pl.digitalradio.Notify", "{\"Ssid\":\"test_ssid\",\"Password\":\"test_password\"}").Return("OK", nil)
 	bfm := busFactoryMock{bcm: bcm}
 
 	app := CreateTestApp()

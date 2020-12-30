@@ -56,7 +56,7 @@ func (s *Service) Create(details *Details) error {
 		return fmt.Errorf("failed to connect to wifi - marshalling message: %w", err)
 	}
 
-	responseMessage, err := busObject.Call("pl.digital_radio.wifi_on", message)
+	responseMessage, err := busObject.Call("pl.digitalradio.wifi_on", message)
 	if err != nil {
 		return fmt.Errorf("failed to connect to wifi - calling via dbus: %w", err)
 	}
