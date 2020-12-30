@@ -15,25 +15,24 @@ import (
 
 //Service to create network uses container for other dependencies.
 type Service struct {
-	InterfaceName string
-	Scan          container.Scan
-	BusFactory    dbusclient.BusFactoryInterface
-	Validator     *validation.Validator
+	interfaceName string
+	scan          container.Scan
+	busFactory    dbusclient.BusFactoryInterface
+	validator     *validation.Validator
 }
 
 //WifiOnResponse keeps info returned by corresponding dbus method
 type WifiOnResponse struct {
-	code string `json:"code" validate:"required"`
+	Code string `json:"code" validate:"required"`
 }
 
-//TODO change struct to lowercase (private)
 //NewService allows to create a new Service struct outside of package app.
 func NewService(container *container.Container, validator *validation.Validator) Service {
 	return Service{
-		InterfaceName: container.InterfaceName,
-		Scan:          container.Scan,
-		BusFactory:    container.BusFactory,
-		Validator:     validator,
+		interfaceName: container.InterfaceName,
+		scan:          container.Scan,
+		busFactory:    container.BusFactory,
+		validator:     validator,
 	}
 }
 
@@ -50,7 +49,7 @@ func marshallJSON(input interface{}) (string, error) {
 //Create connects to network specified in details
 func (s *Service) Create(details *Details) error {
 
-	busObject := s.BusFactory.CreateBusObject()
+	busObject := s.busFactory.CreateBusObject()
 
 	message, err := marshallJSON(details)
 	if err != nil {
@@ -63,9 +62,9 @@ func (s *Service) Create(details *Details) error {
 	}
 
 	response := WifiOnResponse{}
-	s.Validator.ParseAndValidateJSON([]byte(responseMessage), &response)
+	s.validator.ParseAndValidateJSON([]byte(responseMessage), &response)
 
-	if response.code == "OK" {
+	if response.Code == "OK" {
 		return nil
 	}
 
@@ -74,6 +73,6 @@ func (s *Service) Create(details *Details) error {
 
 //Get finds and lists networks in the neighbourhood
 func (s *Service) Get() ([]wlist.Cell, error) {
-	cells, err := s.Scan(s.InterfaceName)
+	cells, err := s.scan(s.interfaceName)
 	return cells, err
 }
