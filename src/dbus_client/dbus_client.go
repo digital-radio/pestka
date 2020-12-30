@@ -27,14 +27,16 @@ func (bo *BusObject) Call(method string, message string) (string, error) {
 	// call := connection.Call("pl.digital_radio.Notify", 0, "c¼h", uint32(0), "", "Hallo Chaostreff!", "Ich begrüße euch herzlich zu meiner c¼h!", []string{}, map[string]dbus.Variant{}, int32(1000))
 	var call *dbus.Call = bo.object.Call(method, 0, message)
 	if call.Err != nil {
-		panic(call.Err)
-		// return errors.New("failed to send message")
-
+		return "", call.Err
 	}
-	fmt.Printf("====  CALL ====\n %s \n", call.Body)
+	fmt.Printf("====  CALL ====\n %s %T \n", call.Body, call.Body[0])
 
-	return "ala", nil
-
+	switch responseMessage := call.Body[0].(type) {
+	case string:
+		return responseMessage, nil
+	default:
+		return "", fmt.Errorf("received message has an invalid type %T", responseMessage)
+	}
 }
 
 //BusFactory has method to create bus object.

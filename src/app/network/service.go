@@ -8,6 +8,7 @@ import (
 
 	wlist "github.com/MonkeyBuisness/golang-iwlist"
 	dbusclient "github.com/digital-radio/pestka/src/dbus_client"
+	"github.com/digital-radio/pestka/src/validation"
 
 	"github.com/digital-radio/pestka/src/container"
 )
@@ -17,11 +18,23 @@ type Service struct {
 	InterfaceName string
 	Scan          container.Scan
 	BusFactory    dbusclient.BusFactoryInterface
+	Validator     *validation.Validator
 }
 
+//WifiOnResponse keeps info returned by corresponding dbus method
+type WifiOnResponse struct {
+	code string `json:"code" validate:"required"`
+}
+
+//TODO change struct to lowercase (private)
 //NewService allows to create a new Service struct outside of package app.
-func NewService(container *container.Container) Service {
-	return Service{InterfaceName: container.InterfaceName, Scan: container.Scan, BusFactory: container.BusFactory}
+func NewService(container *container.Container, validator *validation.Validator) Service {
+	return Service{
+		InterfaceName: container.InterfaceName,
+		Scan:          container.Scan,
+		BusFactory:    container.BusFactory,
+		Validator:     validator,
+	}
 }
 
 func marshallJSON(input interface{}) (string, error) {
@@ -44,12 +57,15 @@ func (s *Service) Create(details *Details) error {
 		return fmt.Errorf("failed to connect to wifi - marshalling message: %w", err)
 	}
 
-	responseBody, err := busObject.Call("pl.digital_radio.Notify", message)
+	responseMessage, err := busObject.Call("pl.digital_radio.wifi_on", message)
 	if err != nil {
 		return fmt.Errorf("failed to connect to wifi - calling via dbus: %w", err)
 	}
 
-	if responseBody == "OK" {
+	response := WifiOnResponse{}
+	s.Validator.ParseAndValidateJSON([]byte(responseMessage), &response)
+
+	if response.code == "OK" {
 		return nil
 	}
 
