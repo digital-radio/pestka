@@ -1,7 +1,10 @@
 //Package container implements container that contains dependencies
 package container
 
-import wlist "github.com/MonkeyBuisness/golang-iwlist"
+import (
+	wlist "github.com/MonkeyBuisness/golang-iwlist"
+	dbusclient "github.com/digital-radio/pestka/src/dbus_client"
+)
 
 //Scan returns a list of available wireless netowrks.
 type Scan func(interfaceName string) ([]wlist.Cell, error)
@@ -10,14 +13,20 @@ type Scan func(interfaceName string) ([]wlist.Cell, error)
 type Container struct {
 	InterfaceName string
 	Scan          Scan
+	BusFactory    dbusclient.BusFactoryInterface
 }
 
 //New allows to create a new Container struct outside of package container.
 func New() Container {
-	return Container{"wlan0", wlist.Scan}
+	return Container{"wlan0", wlist.Scan, &dbusclient.BusFactory{}}
 }
 
 //SetScan allows to override Scan.
 func (c *Container) SetScan(scan Scan) {
 	c.Scan = scan
+}
+
+//SetBusFactory allows to override BusFactory.
+func (c *Container) SetBusFactory(busFactory dbusclient.BusFactoryInterface) {
+	c.BusFactory = busFactory
 }

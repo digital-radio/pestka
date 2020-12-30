@@ -1,14 +1,15 @@
 package tests_test
 
 import (
+	"testing"
+
 	. "github.com/digital-radio/pestka/tests"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestGetRoot(t *testing.T) {
 	// given
-	app := TestApp{}
+	app := CreateTestApp()
 
 	// when
 	w := app.MakeRequest("GET", "/", nil)
