@@ -64,7 +64,7 @@ func (s *Service) Create(details *Details) error {
 	response := WifiOnResponse{}
 	s.validator.ParseAndValidateJSON([]byte(responseMessage), &response)
 
-	if response.Code == "OK" {
+	if response.Code == "ok" {
 		return nil
 	}
 
